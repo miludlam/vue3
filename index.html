@@ -4,7 +4,40 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>TV Time: Scrubs Cast</title>
   </head>
-  <body></body>
+  <body>
+  <h1>Scrubs Main Cast</h1>
+  <div id="app">
+    <p>Scrubs ran for {{ numSeasons }} <small><em>We won't mention any more...</em></small></p>
+    <p>The series featured many characters, though the more prominent characters of the series are mentioned in the following list.</p>
+    <p v-if="cast.length === 0">There are no characters in data...</p>
+    <p v-else>
+      <ul v-for="actor in cast">
+        <li>Name: {{ actor.name }}</li>
+        <li>Position: {{ actor.position }}</li>
+        <li v-if="actor.team !== ''">Team: {{ actor.team }}</li>
+        <li v-else>Team: N/A</li>
+      </ul>
+    </p>
+  </div>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script>
+    const { createApp } = Vue
+    const app = createApp({
+      data: () => ({
+        cast: [
+          { name: 'JD', position: 'Intern', team: 'Medical' },
+          { name: 'Elliot', position: 'Intern', team: 'Medical' },
+          { name: 'Turk', position: 'Intern', team: 'Surgery' },
+          { name: 'Dr. Cox', position: 'Resident', team: 'Medical' },
+          { name: 'Carla', position: 'Nurse', team: '' },
+          { name: 'Bob Kelso', position: 'Chief of Medicine', team: 'Medical' },
+        ],
+        numSeasons: 8,
+      })
+    })
+    app.mount('#app')
+  </script>
+  </body>
 </html>

@@ -11,15 +11,37 @@
   <div id="app">
     <p>Scrubs ran for {{ numSeasons }} <small><em>We won't mention any more...</em></small></p>
     <p>The series featured many characters, though the more prominent characters of the series are mentioned in the following list.</p>
-    <p v-if="cast.length === 0">There are no characters in data...</p>
-    <p v-else>
+    <hr />
+    <h2>Favorites</h2>
+    <div v-if="favorites.length === 0">There are currently no favorited cast members...</div>
+    <div v-else>
+      <ul v-for="favorite in favorites">
+        <li>Name: {{ favorite.name }}</li>
+        <li>Position: {{ favorite.position }}</li>
+        <li v-if="favorite.team !== ''">Team: {{ favorite.team }}</li>
+        <li v-else>Team: N/A</li>
+        <button @click="removeFavorite(favorite)">Remove Favorite</button>
+      </ul>
+    </div>
+    <h2>Cast</h2>
+    <div v-if="cast.length === 0">There are no characters in data...</div>
+    <div v-else>
       <ul v-for="actor in cast">
         <li>Name: {{ actor.name }}</li>
         <li>Position: {{ actor.position }}</li>
         <li v-if="actor.team !== ''">Team: {{ actor.team }}</li>
         <li v-else>Team: N/A</li>
+        <button @click="addFavorite(actor)">Add favorite</button>
       </ul>
-    </p>
+    </div>
+    <hr />
+    <h3>Add a character</h3>
+    <form v-on:submit.prevent="">
+      <input type="text" v-model="newName" placeholder="Name" />
+      <input type="text" v-model="newPosition" placeholder="Position" />
+      <input type="text" v-model="newTeam" placeholder="Team" />
+      <button @click="addCharacter">Submit</button>
+    </form>
   </div>
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   <script>
@@ -34,8 +56,53 @@
           { name: 'Carla', position: 'Nurse', team: '' },
           { name: 'Bob Kelso', position: 'Chief of Medicine', team: 'Medical' },
         ],
+        favorites: [
+        ],
         numSeasons: 8,
-      })
+        newName: '',
+        newPosition: '',
+        newTeam: '',
+      }),
+      methods: {
+        addFavorite(actor) {
+          this.favorites.push(actor);
+          let castCopy = [];
+          for (let i = 0; i < this.cast.length; i++) {
+            if (actor !== this.cast[i]) {
+              castCopy.push(this.cast[i]);
+            }
+          }
+          this.cast = castCopy;
+        },
+        removeFavorite(favorite) {
+          this.cast.push(favorite);
+          let favCopy = [];
+          for (let i = 0; i < this.favorites.length; i++) {
+            if (favorite !== this.favorites[i]) {
+              favCopy.push(this.favorites[i]);
+            }
+          }
+          this.favorites = favCopy;
+        },
+        addCharacter() {
+          if (this.newName === '' || this.newPosition === '' || this.newTeam === '') {
+            console.log("Cannot add empty character");
+            return;
+          }
+
+          let newCharacter = {
+            name: this.newName,
+            position: this.newPosition,
+            team: this.newTeam,
+          }
+
+          this.cast.push(newCharacter);
+
+          this.newName = '';
+          this.newPosition = '';
+          this.newTeam = '';
+        }
+      }
     })
     app.mount('#app')
   </script>

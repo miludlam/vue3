@@ -12,6 +12,13 @@
     <p>Scrubs ran for {{ numSeasons }} <small><em>We won't mention any more...</em></small></p>
     <p>The series featured many characters, though the more prominent characters of the series are mentioned in the following list.</p>
     <hr />
+    <h3>Cast Stats</h3>
+    <div>
+      <ul>
+        <li v-for="(stat, team) in castStats">{{ team }}: {{ stat }}</li>
+      </ul>
+    </div>
+    <hr />
     <h2>Favorites</h2>
     <div v-if="favorites.length === 0">There are currently no favorited cast members...</div>
     <div v-else>
@@ -63,6 +70,39 @@
         newPosition: '',
         newTeam: '',
       }),
+      computed: {
+        castStats() {
+          const departments = [
+            'Medical',
+            'Surgery',
+            'Other'
+          ];
+
+          const scrubStats = {
+            Medical: 0,
+            Surgery: 0,
+            Other: 0,
+          };
+
+          this.cast.forEach(character => {
+            departments.forEach(dept => {
+              if (character.team.includes(dept)) {
+                scrubStats[dept] += 1;
+              }
+            })
+          })
+
+          this.favorites.forEach(character => {
+            departments.forEach(dept => {
+              if (character.team.includes(dept)) {
+                scrubStats[dept] += 1;
+              }
+            })
+          })
+
+          return scrubStats;
+        },
+      },
       methods: {
         addFavorite(actor) {
           this.favorites.push(actor);
